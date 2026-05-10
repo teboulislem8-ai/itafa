@@ -1,4 +1,4 @@
-const WORKER_URL = process.env.NEXT_PUBLIC_AI_WORKER_URL || "http://localhost:8787";
+const WORKER_URL = "";
 
 export function getAiWorkerUrl(): string {
   return WORKER_URL;
