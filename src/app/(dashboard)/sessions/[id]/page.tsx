@@ -147,7 +147,7 @@ export default function SessionChatPage() {
         }),
       })
         .then((r) => r.json())
-        .then((data) => {
+        .then((data: any) => {
           if (!data.skipReason) setConfidenceResult(data as ConfidenceResult);
         })
         .catch(() => { });
