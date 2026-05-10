@@ -1,0 +1,11 @@
+name = "ita-dz"
+main = "worker/index.ts"
+compatibility_date = "2025-01-01"
+
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+
+NEXT_PUBLIC_SUPABASE_URL = "https://cdanltwjxovljtyhxaio.supabase.co"
+
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNkYW5sdHdqeG92bGsp0eWh4YWlvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwMTAxMTAsImV4cCI6MjA5MzU4NjExMH0.c4eOdKA2hudqSEI5AG2drKeipAvIzaFJ-6NUs0mkob4"

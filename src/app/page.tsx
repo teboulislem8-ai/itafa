@@ -1,64 +1,131 @@
-import Image from "next/image";
+"use client";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useLang } from "@/lib/utils/lang-context";
+import { useConnection, useSlowConnection } from "@/lib/utils/connection";
+import { Button } from "@/components/ui";
+import { Card } from "@/components/ui";
 
-export default function Home() {
+export default function DashboardPage() {
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({ sessions: 0, weekSessions: 0, lastCrop: "" });
+  const router = useRouter();
+  const { t, lang, toggleLang } = useLang();
+  const connection = useConnection();
+  const isSlow = useSlowConnection();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        router.push("/login");
+        return;
+      }
+      setLoading(false);
+
+      const sevenDaysAgo = new Date(Date.now() - 7 * 86400000).toISOString();
+
+      Promise.all([
+        supabase.from("sessions").select("id", { count: "exact", head: true }).eq("agent_id", session.user.id),
+        supabase.from("sessions").select("id", { count: "exact", head: true }).eq("agent_id", session.user.id).gte("created_at", sevenDaysAgo),
+        supabase.from("sessions").select("crop").eq("agent_id", session.user.id).neq("crop", "").order("created_at", { ascending: false }).limit(1).maybeSingle(),
+      ]).then(([total, week, last]) => {
+        setStats({
+          sessions: total.count ?? 0,
+          weekSessions: week.count ?? 0,
+          lastCrop: last.data?.crop ?? "—",
+        });
+      });
+    });
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div style={{ padding: 24, fontFamily: "sans-serif" }}>
+        <div className="skeleton" style={{ height: 32, width: 200, marginBottom: 24 }} />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16 }}>
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="skeleton" style={{ height: 100 }} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", fontFamily: "sans-serif" }}>
+      {connection === "offline" && <div className="offline-banner">{t("Mode hors ligne — données limitées", "وضع غير متصل — بيانات محدودة")}</div>}
+      {isSlow && connection === "online" && <div className="slow-connection-banner">{t("Connexion lente — les photos seront compressées", "اتصال بطيء — سيتم ضغط الصور")}</div>}
+
+      <header style={{ borderBottom: "1px solid #e5e7eb", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#fff" }}>
+        <div style={{ fontWeight: 700, fontSize: 18 }}>Musa&apos;id</div>
+        <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
+          <Link href="/" style={{ color: "#1B6B3A", textDecoration: "none", fontWeight: 600 }}>
+            {t("Dashboard", "الرئيسية")}
+          </Link>
+          <Link href="/sessions" style={{ color: "#666", textDecoration: "none" }}>
+            {t("Sessions", "الجلسات")}
+          </Link>
+          <Link href="/observe" style={{ color: "#666", textDecoration: "none" }}>
+            {t("Observation", "الملاحظة")}
+          </Link>
+          <Link href="/lab" style={{ color: "#666", textDecoration: "none" }}>
+            {t("Lab", "المختبر")}
+          </Link>
+        </nav>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <button onClick={toggleLang} style={{ background: "#f3f4f6", border: "1px solid #d1d5db", borderRadius: 6, padding: "6px 10px", fontSize: 13, cursor: "pointer" }}>
+            {lang === "fr" ? "عربي" : "FR"}
+          </button>
+          <button onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }} style={{ background: "none", border: "1px solid #ccc", borderRadius: 6, padding: "6px 12px", fontSize: 13, cursor: "pointer" }}>
+            {t("Déconnexion", "تسجيل الخروج")}
+          </button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+      </header>
+
+      <main style={{ flex: 1, padding: 24, background: "#f9fafb" }}>
+        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>
+          {t("Dashboard", "الرئيسية")}
+        </h1>
+
+        {stats.sessions === 0 ? (
+          <Card style={{ textAlign: "center", padding: 48 }}>
+            <p style={{ color: "#9ca3af", marginBottom: 16 }}>
+              {t("Aucune session pour le moment. Créez votre première session pour commencer le diagnostic.", "لا توجد جلسات بعد. أنشئ جلستك الأولى لبدء التشخيص.")}
+            </p>
+            <Link href="/sessions">
+              <Button>{t("+ Nouvelle session", "+ جلسة جديدة")}</Button>
+            </Link>
+          </Card>
+        ) : (
+          <>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))", gap: 16, marginBottom: 32 }}>
+              {[
+                { label: t("Total sessions", "إجمالي الجلسات"), value: stats.sessions },
+                { label: t("Cette semaine", "هذا الأسبوع"), value: stats.weekSessions },
+                { label: t("Dernière culture", "آخر محصول"), value: stats.lastCrop },
+              ].map((s) => (
+                <Card key={s.label}>
+                  <div style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>{s.label}</div>
+                  <div style={{ fontSize: 28, fontWeight: 700 }}>{s.value}</div>
+                </Card>
+              ))}
+            </div>
+
+            <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+              <Link href="/sessions">
+                <Button size="lg">{t("+ Nouvelle session", "+ جلسة جديدة")}</Button>
+              </Link>
+              <Link href="/observe">
+                <Button variant="secondary" size="lg">{t("Observation terrain", "ملاحظة حقلية")}</Button>
+              </Link>
+              <Link href="/lab">
+                <Button variant="secondary" size="lg">{t("Analyse labo", "تحليل مخبري")}</Button>
+              </Link>
+            </div>
+          </>
+        )}
       </main>
     </div>
   );
