@@ -61,7 +61,7 @@ export default {
     }
 
     try {
-      const body = await request.json();
+      const body: any = await request.json();
       const { messages, profile } = body;
 
       if (!messages || !Array.isArray(messages) || messages.length === 0) {
