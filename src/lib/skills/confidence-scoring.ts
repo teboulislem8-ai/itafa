@@ -153,7 +153,7 @@ async function callGeminiForDiagnosis(
     throw new Error(`Gemini API error (temp=${temperature}): ${errText}`);
   }
 
-  const json = await res.json();
+  const json: any = await res.json();
   return json.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
 
