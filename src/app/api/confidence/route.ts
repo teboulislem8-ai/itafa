@@ -4,7 +4,19 @@ import { supabaseAdmin } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { imageUrl, diagnosisContext, userMessage, sessionId } = await req.json();
+    type ConfidenceRequest = {
+      imageUrl: string;
+      diagnosisContext?: string;
+      userMessage?: string;
+      sessionId?: string;
+    };
+
+    const {
+      imageUrl,
+      diagnosisContext,
+      userMessage,
+      sessionId,
+    } = (await req.json()) as ConfidenceRequest;
 
     if (!imageUrl) {
       return NextResponse.json({ error: "imageUrl required" }, { status: 400 });
