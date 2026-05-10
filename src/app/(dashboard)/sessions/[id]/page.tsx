@@ -96,7 +96,7 @@ export default function SessionChatPage() {
       try {
         const res = await fetch("/api/upload", { method: "POST", body: form });
         if (!res.ok) throw new Error("Upload failed");
-        const data = await res.json();
+        const data = (await res.json()) as { url?: string };
         if (data.url) imageUrl = data.url;
       } catch {
         setError(t("Erreur lors du téléchargement de la photo.", "خطأ في رفع الصورة."));
@@ -150,7 +150,7 @@ export default function SessionChatPage() {
         .then((data) => {
           if (!data.skipReason) setConfidenceResult(data as ConfidenceResult);
         })
-        .catch(() => {});
+        .catch(() => { });
     }
 
     try {
@@ -166,11 +166,11 @@ export default function SessionChatPage() {
           messages: apiMessages,
           profile: profile
             ? {
-                full_name: profile.full_name,
-                wilaya: profile.wilaya,
-                specializations: profile.specializations,
-                language_pref: profile.language_pref,
-              }
+              full_name: profile.full_name,
+              wilaya: profile.wilaya,
+              specializations: profile.specializations,
+              language_pref: profile.language_pref,
+            }
             : undefined,
         }),
       });
@@ -219,7 +219,7 @@ export default function SessionChatPage() {
                 return copy;
               });
             }
-          } catch {}
+          } catch { }
         }
       }
 
