@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Cairo } from "next/font/google";
+import { DM_Serif_Display, IBM_Plex_Sans, Cairo } from "next/font/google";
 import "./globals.css";
 import { LangProvider } from "@/lib/utils/lang-context";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const dmSerif = DM_Serif_Display({
+  variable: "--font-display",
   subsets: ["latin"],
+  weight: "400",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const ibmPlex = IBM_Plex_Sans({
+  variable: "--font-body",
   subsets: ["latin"],
+  weight: ["400", "500"],
 });
 
 const cairo = Cairo({
@@ -20,7 +22,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
-  title: "Musa'id — مساعد الحقل / Assistant de Terrain",
+  title: "ITA — Field Assistant",
   description: "Assistant de terrain agricole IA pour les ingénieurs agronomes algériens",
   manifest: "/manifest.json",
 };
@@ -33,9 +35,9 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${geistSans.variable} ${geistMono.variable} ${cairo.variable} h-full antialiased`}
+      className={`${dmSerif.variable} ${ibmPlex.variable} ${cairo.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col" style={{ fontFamily: "var(--font-cairo), var(--font-geist-sans), sans-serif" }}>
+      <body className="min-h-full flex flex-col">
         <LangProvider>{children}</LangProvider>
       </body>
     </html>

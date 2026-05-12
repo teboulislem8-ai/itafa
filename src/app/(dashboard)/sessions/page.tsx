@@ -74,7 +74,7 @@ export default function SessionsPage() {
               <Card style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
                 <div>
                   <div style={{ fontWeight: 600 }}>{s.title || t("Sans titre", "بلا عنوان")}</div>
-                  <div style={{ fontSize: 13, color: "#666", marginTop: 2 }}>
+                  <div style={{ fontSize: 13, color: "var(--text-muted)", marginTop: 2 }}>
                     {s.crop && `${s.crop} · `}{s.wilaya && `${s.wilaya} · `}
                     {new Date(s.updated_at).toLocaleDateString(lang === "ar" ? "ar-DZ" : "fr-FR")}
                   </div>

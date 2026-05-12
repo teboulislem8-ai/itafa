@@ -84,7 +84,7 @@ export default function ReportPage() {
               const json = JSON.parse(line.replace("data: ", "").trim());
               const text = json.candidates?.[0]?.content?.parts?.[0]?.text || "";
               full += text;
-            } catch {}
+            } catch { }
           }
         }
 
@@ -99,7 +99,7 @@ export default function ReportPage() {
           await supabase.from("sessions").update({ status: "report_generated" }).eq("id", id);
         }
       }
-    } catch {}
+    } catch { }
 
     setGenerating(false);
   }
@@ -107,14 +107,14 @@ export default function ReportPage() {
   return (
     <div style={{ maxWidth: 700, margin: "0 auto" }}>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Rapport de terrain</h1>
-      <p style={{ color: "#666", fontSize: 14, marginBottom: 24 }}>
+      <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 24 }}>
         {session?.title || "Session"} · {session?.crop && `${session.crop} · `}
         {session?.created_at && new Date(session.created_at).toLocaleDateString("fr-FR")}
       </p>
 
       {!report && !generating && (
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: 32, textAlign: "center" }}>
-          <p style={{ color: "#666", marginBottom: 16 }}>Aucun rapport généré pour cette session.</p>
+        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-light)", borderRadius: 8, padding: 32, textAlign: "center" }}>
+          <p style={{ color: "var(--text-muted)", marginBottom: 16 }}>Aucun rapport généré pour cette session.</p>
           <Button onClick={generateReport} disabled={messages.length === 0}>
             Générer le rapport
           </Button>
@@ -122,14 +122,14 @@ export default function ReportPage() {
       )}
 
       {generating && (
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20 }}>
-          <p style={{ color: "#666" }}>Génération du rapport en cours...</p>
+        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-light)", borderRadius: 8, padding: 20 }}>
+          <p style={{ color: "var(--text-muted)" }}>Génération du rapport en cours...</p>
         </div>
       )}
 
       {report && (
         <div>
-          <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: 24, whiteSpace: "pre-wrap", lineHeight: 1.6, fontSize: 14, marginBottom: 16 }}>
+          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-light)", borderRadius: 8, padding: 24, whiteSpace: "pre-wrap", lineHeight: 1.6, fontSize: 14, marginBottom: 16 }}>
             {report.content}
           </div>
           <Button

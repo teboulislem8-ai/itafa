@@ -104,13 +104,13 @@ export default function LabPage() {
               const text = json.candidates?.[0]?.content?.parts?.[0]?.text || "";
               full += text;
               setAnalysis(full);
-            } catch {}
+            } catch { }
           }
         }
 
         await supabase.from("lab_reports").update({ ai_interpretation: full }).eq("session_id", session.id);
       }
-    } catch {}
+    } catch { }
 
     setSubmitting(false);
     setDone(true);
@@ -118,10 +118,10 @@ export default function LabPage() {
 
   if (done) {
     return (
-      <div style={{ maxWidth: 700, margin: "0 auto" }}>
+      <div>
         <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16 }}>Analyse enregistrée</h1>
-        <p style={{ color: "#666", marginBottom: 16 }}>Session #{sessionId.slice(0, 8)}</p>
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 8, padding: 20, whiteSpace: "pre-wrap", lineHeight: 1.6, fontSize: 14 }}>
+        <p style={{ color: "var(--text-muted)", marginBottom: 16 }}>Session #{sessionId.slice(0, 8)}</p>
+        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-light)", borderRadius: 8, padding: 20, whiteSpace: "pre-wrap", lineHeight: 1.6, fontSize: 14 }}>
           {analysis || "Analyse en cours..."}
         </div>
         <a href={`/sessions/${sessionId}`} style={{ display: "inline-block", marginTop: 16, color: "#1B6B3A", fontWeight: 600 }}>
@@ -132,14 +132,14 @@ export default function LabPage() {
   }
 
   return (
-    <div style={{ maxWidth: 600, margin: "0 auto" }}>
+    <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>Interprétation laboratoire</h1>
 
       <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
-        <button onClick={() => { setType("soil"); setValues({}); }} style={{ padding: "8px 20px", borderRadius: 20, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, background: type === "soil" ? "#1B6B3A" : "#e5e7eb", color: type === "soil" ? "#fff" : "#333" }}>
+        <button onClick={() => { setType("soil"); setValues({}); }} style={{ padding: "8px 20px", borderRadius: 20, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, background: type === "soil" ? "#1B6B3A" : "var(--border-light)", color: type === "soil" ? "var(--border-light)" : "var(--text-primary)" }}>
           Analyse de sol
         </button>
-        <button onClick={() => { setType("water"); setValues({}); }} style={{ padding: "8px 20px", borderRadius: 20, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, background: type === "water" ? "#1B6B3A" : "#e5e7eb", color: type === "water" ? "#fff" : "#333" }}>
+        <button onClick={() => { setType("water"); setValues({}); }} style={{ padding: "8px 20px", borderRadius: 20, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 14, background: type === "water" ? "#1B6B3A" : "var(--border-light)", color: type === "water" ? "var(--border-light)" : "var(--text-primary)" }}>
           Analyse d&apos;eau
         </button>
       </div>
@@ -148,7 +148,7 @@ export default function LabPage() {
         {fields.map((f) => (
           <div key={f.key}>
             <label style={{ display: "block", fontSize: 13, fontWeight: 600, marginBottom: 4 }}>
-              {f.label} {f.unit && <span style={{ fontWeight: 400, color: "#666" }}>({f.unit})</span>}
+              {f.label} {f.unit && <span style={{ fontWeight: 400, color: "var(--text-muted)" }}>({f.unit})</span>}
             </label>
             <input
               type="number" step="any"
@@ -164,7 +164,7 @@ export default function LabPage() {
       <button
         onClick={submitLab}
         disabled={submitting}
-        style={{ marginTop: 24, padding: "12px 24px", background: "#1B6B3A", color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 16, width: "100%" }}
+        style={{ marginTop: 24, padding: "12px 24px", background: "#1B6B3A", color: "var(--border-light)", border: "none", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 16, width: "100%" }}
       >
         {submitting ? "Analyse en cours..." : "Interpréter →"}
       </button>

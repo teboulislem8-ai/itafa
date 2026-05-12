@@ -54,37 +54,13 @@ export default function DashboardPage() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", fontFamily: "sans-serif" }}>
+    <div>
       {connection === "offline" && <div className="offline-banner">{t("Mode hors ligne — données limitées", "وضع غير متصل — بيانات محدودة")}</div>}
       {isSlow && connection === "online" && <div className="slow-connection-banner">{t("Connexion lente — les photos seront compressées", "اتصال بطيء — سيتم ضغط الصور")}</div>}
 
-      <header style={{ borderBottom: "1px solid #e5e7eb", padding: "12px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#fff" }}>
-        <div style={{ fontWeight: 700, fontSize: 18 }}>Musa&apos;id</div>
-        <nav style={{ display: "flex", gap: 16, fontSize: 14 }}>
-          <Link href="/" style={{ color: "#1B6B3A", textDecoration: "none", fontWeight: 600 }}>
-            {t("Dashboard", "الرئيسية")}
-          </Link>
-          <Link href="/sessions" style={{ color: "#666", textDecoration: "none" }}>
-            {t("Sessions", "الجلسات")}
-          </Link>
-          <Link href="/observe" style={{ color: "#666", textDecoration: "none" }}>
-            {t("Observation", "الملاحظة")}
-          </Link>
-          <Link href="/lab" style={{ color: "#666", textDecoration: "none" }}>
-            {t("Lab", "المختبر")}
-          </Link>
-        </nav>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button onClick={toggleLang} style={{ background: "#f3f4f6", border: "1px solid #d1d5db", borderRadius: 6, padding: "6px 10px", fontSize: 13, cursor: "pointer" }}>
-            {lang === "fr" ? "عربي" : "FR"}
-          </button>
-          <button onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }} style={{ background: "none", border: "1px solid #ccc", borderRadius: 6, padding: "6px 12px", fontSize: 13, cursor: "pointer" }}>
-            {t("Déconnexion", "تسجيل الخروج")}
-          </button>
-        </div>
-      </header>
 
-      <main style={{ flex: 1, padding: 24, background: "#f9fafb" }}>
+
+      <main>
         <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 24 }}>
           {t("Dashboard", "الرئيسية")}
         </h1>
@@ -107,7 +83,7 @@ export default function DashboardPage() {
                 { label: t("Dernière culture", "آخر محصول"), value: stats.lastCrop },
               ].map((s) => (
                 <Card key={s.label}>
-                  <div style={{ fontSize: 13, color: "#666", marginBottom: 4 }}>{s.label}</div>
+                  <div style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 4 }}>{s.label}</div>
                   <div style={{ fontSize: 28, fontWeight: 700 }}>{s.value}</div>
                 </Card>
               ))}

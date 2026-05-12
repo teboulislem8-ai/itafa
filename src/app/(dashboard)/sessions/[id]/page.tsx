@@ -258,10 +258,10 @@ export default function SessionChatPage() {
 
       <div style={{ marginBottom: 16 }}>
         <h1 style={{ fontSize: 20, fontWeight: 700 }}>{session?.title || t("Chargement...", "جارٍ التحميل...")}</h1>
-        {session?.crop && <span style={{ fontSize: 13, color: "#666" }}>{session.crop}</span>}
+        {session?.crop && <span style={{ fontSize: 13, color: "var(--text-muted)" }}>{session.crop}</span>}
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", border: "1px solid #e5e7eb", borderRadius: 8, padding: 16, background: "#fff", marginBottom: 12 }}>
+      <div style={{ flex: 1, overflowY: "auto", border: "1px solid var(--border-light)", borderRadius: 8, padding: 16, background: "var(--bg-card)", marginBottom: 12 }}>
         {messages.length === 0 && !loading && (
           <div className="empty-state">
             {t("Envoyez un message ou une photo pour commencer le diagnostic.", "أرسل رسالة أو صورة لبدء التشخيص.")}
@@ -302,7 +302,7 @@ export default function SessionChatPage() {
         )}
 
         {confidenceResult && !confidenceResult.skipReason && (
-          <div style={{ marginTop: 12, padding: 12, border: "1px solid #e5e7eb", borderRadius: 8, background: "#fafafa", fontSize: 13 }}>
+          <div style={{ marginTop: 12, padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "#fafafa", fontSize: 13 }}>
             <div style={{ fontWeight: 600, marginBottom: 6, color: "#374151" }}>
               {t("Évaluation de la confiance diagnostique", "تقييم الثقة التشخيصية")}
             </div>
@@ -368,7 +368,7 @@ export default function SessionChatPage() {
         <button
           onClick={send}
           disabled={loading || uploading}
-          style={{ padding: "10px 20px", background: "#1B6B3A", color: "#fff", border: "none", borderRadius: 6, cursor: "pointer", fontWeight: 600 }}
+          style={{ padding: "10px 20px", background: "#1B6B3A", color: "var(--border-light)", border: "none", borderRadius: 6, cursor: "pointer", fontWeight: 600 }}
           aria-label={t("Envoyer", "إرسال")}
         >
           {loading ? "..." : t("Envoyer", "إرسال")}

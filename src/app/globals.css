@@ -1,46 +1,154 @@
+@import "tailwindcss";
+
+/* ── ITA DESIGN TOKENS ─────────────────────────────────────── */
+:root {
+  /* Surfaces */
+  --bg-canvas: #E8E1D4;
+  --bg-card: #F4EFE5;
+  --bg-surface: #FDFAF5;
+  --bg-olive: #3A4A28;
+  --bg-olive-mid: #4E6234;
+  --bg-soil: #4E3526;
+  --bg-sand-light: #DAD2BF;
+  --bg-sand-mid: #C4B49A;
+
+  /* Text */
+  --text-primary: #18170F;
+  --text-secondary: #4A4640;
+  --text-muted: #888070;
+  --text-inverse: #EAE1D0;
+  --text-inv-muted: #9A9284;
+
+  /* Brand */
+  --brand: #3A4A28;
+  --brand-mid: #5A6E3E;
+  --brand-pale: #8A9E6A;
+
+  /* Functional accents */
+  --blue: #1B5FA0;
+  --blue-bg: #EBF4FD;
+  --blue-text: #123E6A;
+  --green: #1A6438;
+  --green-bg: #E8F6EE;
+  --green-text: #0E4228;
+  --amber: #9E6010;
+  --amber-bg: #FDF4E3;
+  --amber-text: #6A3E0A;
+  --red: #A02828;
+  --red-bg: #FDEAEA;
+  --red-text: #6A1A1A;
+
+  /* Borders */
+  --border: #C8BCA8;
+  --border-light: #DDD4C0;
+  --border-focus: #1B5FA0;
+
+  /* Typography */
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+
+  /* Spacing */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+}
+
+/* ── BASE ───────────────────────────────────────────────────── */
+html,
+body {
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+}
+
+/* ── CONNECTION BANNERS ─────────────────────────────────────── */
 .slow-connection-banner {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--amber-bg);
+  color: var(--amber-text);
   text-align: center;
   padding: 6px 16px;
   font-size: 13px;
-  font-family: sans-serif;
+  font-family: var(--font-body);
 }
 
 .offline-banner {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--red-bg);
+  color: var(--red-text);
   text-align: center;
   padding: 6px 16px;
   font-size: 13px;
-  font-family: sans-serif;
+  font-family: var(--font-body);
 }
 
+/* ── SKELETON ───────────────────────────────────────────────── */
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg,
+      var(--bg-sand-light) 25%,
+      var(--bg-sand-mid) 50%,
+      var(--bg-sand-light) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 @keyframes shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
+/* ── EMPTY / ERROR STATES ───────────────────────────────────── */
 .empty-state {
   text-align: center;
   padding: 48px 24px;
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 14px;
 }
 
 .error-state {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
+  background: var(--red-bg);
+  border: 1px solid rgba(160, 40, 40, 0.2);
+  color: var(--red-text);
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-size: 14px;
   margin-bottom: 12px;
+}
+
+/* ── LEAF VEIN ANIMATION ────────────────────────────────────── */
+@keyframes vein-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes vein-pulse {
+
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.vein-animate {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: vein-draw 1.8s ease-in-out forwards;
+  pathLength: 1;
+}
+
+.vein-pulse {
+  animation: vein-pulse 2s ease-in-out infinite;
 }
