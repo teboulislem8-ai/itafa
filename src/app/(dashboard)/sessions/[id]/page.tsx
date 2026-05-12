@@ -253,7 +253,7 @@ export default function SessionChatPage() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 80px)", maxWidth: 700, margin: "0 auto", width: "100%" }}>
+    <div style={{ display: "flex", flexDirection: "column", height: "calc(100vh - 48px)", width: "100%" }}>
       {connection === "offline" && <div className="offline-banner">{t("Mode hors ligne", "وضع غير متصل")}</div>}
 
       <div style={{ marginBottom: 16 }}>

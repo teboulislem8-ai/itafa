@@ -105,7 +105,7 @@ export default function ReportPage() {
   }
 
   return (
-    <div style={{ maxWidth: 700, margin: "0 auto" }}>
+    <div>
       <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>Rapport de terrain</h1>
       <p style={{ color: "var(--text-muted)", fontSize: 14, marginBottom: 24 }}>
         {session?.title || "Session"} · {session?.crop && `${session.crop} · `}

@@ -48,34 +48,39 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--bg-canvas)", fontFamily: "var(--font-body)" }}>
-      <header style={{
-        borderBottom: "1px solid var(--border-light)",
-        padding: "0 24px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
+    <div style={{ minHeight: "100vh", background: "var(--bg-canvas)", fontFamily: "var(--font-body)" }}>
+      {/* Fixed left sidebar */}
+      <aside style={{
+        position: "fixed",
+        left: 0,
+        top: 0,
+        width: 240,
+        height: "100vh",
         background: "var(--bg-olive)",
-        height: 52,
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 100,
       }}>
         {/* Brand */}
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <LeafLogo />
-          <div>
-            <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text-inverse)", lineHeight: 1 }}>ITA</div>
-            <div style={{ fontSize: 9, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-inv-muted)" }}>Field Assistant</div>
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <LeafLogo />
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text-inverse)", lineHeight: 1 }}>ITA</div>
+              <div style={{ fontSize: 9, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-inv-muted)" }}>Field Assistant</div>
+            </div>
           </div>
         </div>
 
         {/* Nav */}
-        <nav style={{ display: "flex", gap: 4 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 2, padding: 12 }}>
           {navLinks.map((l) => (
             <Link key={l.href} href={l.href} style={{
-              fontSize: 13,
+              fontSize: 14,
               fontWeight: 500,
               color: pathname === l.href ? "var(--text-inverse)" : "var(--text-inv-muted)",
               textDecoration: "none",
-              padding: "6px 12px",
+              padding: "10px 12px",
               borderRadius: "var(--radius-sm)",
               background: pathname === l.href ? "rgba(255,255,255,0.1)" : "transparent",
               transition: "all 140ms ease",
@@ -85,27 +90,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           ))}
         </nav>
 
-        {/* Sign out */}
-        <button
-          onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }}
-          style={{
-            background: "transparent",
-            border: "1px solid rgba(255,255,255,0.2)",
-            borderRadius: "var(--radius-sm)",
-            padding: "5px 12px",
-            fontSize: 12,
-            fontWeight: 500,
-            color: "var(--text-inv-muted)",
-            cursor: "pointer",
-            fontFamily: "var(--font-body)",
-            letterSpacing: "0.02em",
-          }}
-        >
-          Déconnexion
-        </button>
-      </header>
+        {/* Spacer */}
+        <div style={{ flex: 1 }} />
 
-      <main style={{ flex: 1, padding: 24 }}>{children}</main>
+        {/* Sign out */}
+        <div style={{ padding: 12 }}>
+          <button
+            onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }}
+            style={{
+              background: "transparent",
+              border: "1px solid rgba(255,255,255,0.2)",
+              borderRadius: "var(--radius-sm)",
+              padding: "8px 12px",
+              fontSize: 13,
+              fontWeight: 500,
+              color: "var(--text-inv-muted)",
+              cursor: "pointer",
+              fontFamily: "var(--font-body)",
+              letterSpacing: "0.02em",
+              width: "100%",
+            }}
+          >
+            Déconnexion
+          </button>
+        </div>
+      </aside>
+
+      {/* Main content */}
+      <main style={{ marginLeft: 240, padding: 24 }}>{children}</main>
     </div>
   );
 }
