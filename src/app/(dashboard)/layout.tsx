@@ -21,6 +21,7 @@ const LeafLogo = () => (
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
@@ -30,6 +31,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       setLoading(false);
     });
   }, [router]);
+
+  useEffect(() => { setIsMenuOpen(false); }, [pathname]);
 
   if (loading) return (
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--bg-canvas)", fontFamily: "var(--font-body)" }}>
@@ -48,61 +51,119 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   ];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg-canvas)", fontFamily: "var(--font-body)" }}>
-      {/* Fixed left sidebar */}
-      <aside style={{
-        position: "fixed",
-        left: 0,
-        top: 0,
-        width: 240,
-        height: "100vh",
-        background: "var(--bg-olive)",
-        display: "flex",
-        flexDirection: "column",
-        zIndex: 100,
-      }}>
-        {/* Brand */}
-        <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+    <>
+      <style>{`
+        .dash-root {
+          min-height: 100vh;
+          background: var(--bg-canvas);
+          font-family: var(--font-body);
+          overflow-x: hidden;
+        }
+        .sidebar-desktop {
+          position: fixed; left: 0; top: 0;
+          width: 240px; height: 100vh;
+          background: var(--bg-olive);
+          display: flex; flex-direction: column;
+          z-index: 100;
+        }
+        .dashboard-main {
+          margin-left: 240px;
+          padding: 24px;
+        }
+        .mobile-topbar {
+          display: none;
+        }
+        @media (max-width: 768px) {
+          .sidebar-desktop { display: none; }
+          .dashboard-main { margin-left: 0; padding: 12px; }
+          .mobile-topbar {
+            display: flex;
+            height: 48px;
+            background: var(--bg-olive);
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+          }
+          .dashboard-main h1 {
+            font-size: 20px !important;
+          }
+        }
+      `}</style>
+
+      <div className="dash-root">
+        {/* Mobile top bar */}
+        <div className="mobile-topbar">
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <LeafLogo />
+            <div>
+              <div style={{ fontFamily: "var(--font-display)", fontSize: 16, color: "var(--text-inverse)", lineHeight: 1 }}>ITA</div>
+              <div style={{ fontSize: 8, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-inv-muted)" }}>Field Assistant</div>
+            </div>
+          </div>
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            style={{ background: "none", border: "none", cursor: "pointer", padding: 8 }}
+            aria-label="Open menu"
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--text-inverse)" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 6h18M3 12h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile menu overlay */}
+        <div className="mobile-overlay" style={{
+          position: "fixed",
+          left: 0, right: 0, top: 0, bottom: 0,
+          background: "var(--bg-olive)",
+          zIndex: 200,
+          display: isMenuOpen ? "flex" : "none",
+          flexDirection: "column",
+          padding: "20px 16px",
+        }}>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button
+              onClick={() => setIsMenuOpen(false)}
+              style={{ background: "none", border: "none", color: "var(--text-inverse)", cursor: "pointer", fontSize: 24, padding: 4 }}
+              aria-label="Close menu"
+            >
+              ✕
+            </button>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8, marginBottom: 32 }}>
             <LeafLogo />
             <div>
               <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text-inverse)", lineHeight: 1 }}>ITA</div>
               <div style={{ fontSize: 9, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-inv-muted)" }}>Field Assistant</div>
             </div>
           </div>
-        </div>
-
-        {/* Nav */}
-        <nav style={{ display: "flex", flexDirection: "column", gap: 2, padding: 12 }}>
-          {navLinks.map((l) => (
-            <Link key={l.href} href={l.href} style={{
-              fontSize: 14,
-              fontWeight: 500,
-              color: pathname === l.href ? "var(--text-inverse)" : "var(--text-inv-muted)",
-              textDecoration: "none",
-              padding: "10px 12px",
-              borderRadius: "var(--radius-sm)",
-              background: pathname === l.href ? "rgba(255,255,255,0.1)" : "transparent",
-              transition: "all 140ms ease",
-            }}>
-              {l.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Spacer */}
-        <div style={{ flex: 1 }} />
-
-        {/* Sign out */}
-        <div style={{ padding: 12 }}>
+          <nav style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            {navLinks.map((l) => (
+              <Link key={l.href} href={l.href} style={{
+                fontSize: 16,
+                fontWeight: 500,
+                color: pathname === l.href ? "var(--text-inverse)" : "var(--text-inv-muted)",
+                textDecoration: "none",
+                padding: "12px 14px",
+                borderRadius: "var(--radius-sm)",
+                background: pathname === l.href ? "rgba(255,255,255,0.1)" : "transparent",
+              }}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <div style={{ flex: 1 }} />
           <button
             onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }}
             style={{
               background: "transparent",
               border: "1px solid rgba(255,255,255,0.2)",
               borderRadius: "var(--radius-sm)",
-              padding: "8px 12px",
-              fontSize: 13,
+              padding: "12px 14px",
+              fontSize: 14,
               fontWeight: 500,
               color: "var(--text-inv-muted)",
               cursor: "pointer",
@@ -114,10 +175,60 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             Déconnexion
           </button>
         </div>
-      </aside>
 
-      {/* Main content */}
-      <main style={{ marginLeft: 240, padding: 24 }}>{children}</main>
-    </div>
+        {/* Fixed left sidebar (desktop/tablet) */}
+        <aside className="sidebar-desktop">
+          <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <LeafLogo />
+              <div>
+                <div style={{ fontFamily: "var(--font-display)", fontSize: 18, color: "var(--text-inverse)", lineHeight: 1 }}>ITA</div>
+                <div style={{ fontSize: 9, fontWeight: 500, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-inv-muted)" }}>Field Assistant</div>
+              </div>
+            </div>
+          </div>
+          <nav style={{ display: "flex", flexDirection: "column", gap: 2, padding: 12 }}>
+            {navLinks.map((l) => (
+              <Link key={l.href} href={l.href} style={{
+                fontSize: 14,
+                fontWeight: 500,
+                color: pathname === l.href ? "var(--text-inverse)" : "var(--text-inv-muted)",
+                textDecoration: "none",
+                padding: "10px 12px",
+                borderRadius: "var(--radius-sm)",
+                background: pathname === l.href ? "rgba(255,255,255,0.1)" : "transparent",
+                transition: "all 140ms ease",
+              }}>
+                {l.label}
+              </Link>
+            ))}
+          </nav>
+          <div style={{ flex: 1 }} />
+          <div style={{ padding: 12 }}>
+            <button
+              onClick={async () => { await supabase.auth.signOut(); router.push("/login"); }}
+              style={{
+                background: "transparent",
+                border: "1px solid rgba(255,255,255,0.2)",
+                borderRadius: "var(--radius-sm)",
+                padding: "8px 12px",
+                fontSize: 13,
+                fontWeight: 500,
+                color: "var(--text-inv-muted)",
+                cursor: "pointer",
+                fontFamily: "var(--font-body)",
+                letterSpacing: "0.02em",
+                width: "100%",
+              }}
+            >
+              Déconnexion
+            </button>
+          </div>
+        </aside>
+
+        {/* Main content */}
+        <main className="dashboard-main">{children}</main>
+      </div>
+    </>
   );
 }

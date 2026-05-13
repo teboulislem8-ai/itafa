@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { getAiWorkerUrl } from "@/lib/utils/config";
 
@@ -191,6 +191,15 @@ const labelStyle: React.CSSProperties = {
 // ── Main Page ────────────────────────────────────────────────────────────────
 export default function ObservePage() {
   const [step, setStep] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
   const [crop, setCrop] = useState("");
   const [growthStage, setGrowthStage] = useState("");
   const [symptoms, setSymptoms] = useState<string[]>([]);
@@ -283,22 +292,20 @@ export default function ObservePage() {
 
   // ── Card shell shared by all states ───────────────────────────────────────
   const cardShell: React.CSSProperties = {
-    maxWidth: 760,
-    margin: "0 auto",
     background: "var(--bg-card, var(--border-light)fff)",
     border: "1px solid var(--border-light, #ece8e1)",
     borderRadius: "var(--radius-lg, 12px)",
-    padding: 32,
+    padding: isMobile ? 16 : 32,
     boxShadow: "0 2px 16px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.02)",
   };
 
   const pageTitle = (
     <h1 style={{
       fontFamily: "var(--font-display, 'DM Serif Display', serif)",
-      fontSize: 34,
+      fontSize: isMobile ? 24 : 34,
       fontWeight: 400,
       color: "var(--brand, #1B6B3A)",
-      marginBottom: 28,
+      marginBottom: isMobile ? 20 : 28,
       lineHeight: 1.15,
     }}>
       Observation terrain
