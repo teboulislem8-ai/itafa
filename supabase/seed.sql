@@ -1,0 +1,3 @@
+-- Seed data for local development.
+-- Wilayas are seeded in migration 20260526000001_wilayas.sql.
+-- Add test data here as needed during development.

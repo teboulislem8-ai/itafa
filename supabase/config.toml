@@ -1,0 +1,28 @@
+[project]
+name = "itadz"
+plan = "free"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://*.itadz.workers.dev"]
+jwt_expiry = 3600
+
+[auth.external.google]
+enabled = false
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+
+[db]
+port = 54322
+major_version = 15
+
+[storage]
+enabled = true
+
+[edge_functions]
+enabled = true
+include = ["cleanup-expired-files"]
