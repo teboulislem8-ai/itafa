@@ -107,6 +107,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  try {
   const supabase = await createClient();
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -254,4 +255,11 @@ export async function POST(request: Request) {
     location: location ?? null,
     nextSteps: output.nextSteps,
   });
+  } catch (err) {
+    console.error("POST /api/chat error:", err);
+    return NextResponse.json(
+      { error: err instanceof Error ? err.message : "Internal server error" },
+      { status: 500 },
+    );
+  }
 }
